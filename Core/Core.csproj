@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9800A824-E5F1-4CBC-B02B-F8D0D49667A1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NightlyCode.Core</RootNamespace>
+    <AssemblyName>NightlyCode.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\NightlyCode.Core.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\NightlyCode.Core.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArgumentCollection.cs" />
+    <Compile Include="Collections\Cache\Cache.cs" />
+    <Compile Include="Collections\Cache\StaticCache.cs" />
+    <Compile Include="Collections\Cache\TimedCache.cs" />
+    <Compile Include="Collections\Cache\CacheEntry.cs" />
+    <Compile Include="Collections\Cache\ICache.cs" />
+    <Compile Include="Collections\CircularList.cs" />
+    <Compile Include="Collections\DecayingCollection.cs" />
+    <Compile Include="Collections\IDecayingItem.cs" />
+    <Compile Include="Collections\EnumerationExtensions.cs" />
+    <Compile Include="Collections\EqualityComparers\ReferenceEqualityComparer.cs" />
+    <Compile Include="Collections\History.cs" />
+    <Compile Include="Collections\NotificationList.cs" />
+    <Compile Include="Collections\TypeHandlerLookup.cs" />
+    <Compile Include="ComponentModel\Accessor.cs" />
+    <Compile Include="ComponentModel\ActionPerSecondComputer.cs" />
+    <Compile Include="ComponentModel\ActionPipeline.cs" />
+    <Compile Include="ComponentModel\Arguments.cs" />
+    <Compile Include="ComponentModel\Tree\BinaryBounds.cs" />
+    <Compile Include="ComponentModel\Tree\BinaryLeaf.cs" />
+    <Compile Include="ComponentModel\Tree\BinaryNode.cs" />
+    <Compile Include="ComponentModel\Tree\BinaryRoot.cs" />
+    <Compile Include="ComponentModel\Tree\BinaryTree.cs" />
+    <Compile Include="ComponentModel\ICloneable.cs" />
+    <Compile Include="ComponentModel\InstanceProvider.cs" />
+    <Compile Include="ComponentModel\Randomizer.cs" />
+    <Compile Include="Data\DataTable.cs" />
+    <Compile Include="Helpers\Commands.cs" />
+    <Compile Include="Helpers\ProcessInformation.cs" />
+    <Compile Include="Reflection\ReflectedProperty.cs" />
+    <Compile Include="Reflection\Reflector.cs" />
+    <Compile Include="ComponentModel\ResourceAccessor.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\ConfigurationException.cs" />
+    <Compile Include="Configuration\DefaultValueAttribute.cs" />
+    <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Configuration\IConfigurationAccess.cs" />
+    <Compile Include="Configuration\Ini\IniSectionAccess.cs" />
+    <Compile Include="Configuration\Ini\IniFile.cs" />
+    <Compile Include="Configuration\Ini\IniSection.cs" />
+    <Compile Include="Conversion\ConversionKey.cs" />
+    <Compile Include="Conversion\Converter.cs" />
+    <Compile Include="Helpers\ArrayOperations.cs" />
+    <Compile Include="Helpers\BinaryReaderExtensions.cs" />
+    <Compile Include="Helpers\ControlHelper.cs" />
+    <Compile Include="Helpers\PathExtensions.cs" />
+    <Compile Include="Helpers\RegExHelper.cs" />
+    <Compile Include="Helpers\TypeHelper.cs" />
+    <Compile Include="Helpers\XMLExtensions.cs" />
+    <Compile Include="Logs\ConsoleLogger.cs" />
+    <Compile Include="Helpers\DataDisplay.cs" />
+    <Compile Include="Logs\FileLogger.cs" />
+    <Compile Include="Logs\HideAttribute.cs" />
+    <Compile Include="Logs\LogExtensions.cs" />
+    <Compile Include="Logs\LogFileCleaner.cs" />
+    <Compile Include="Logs\MessageType.cs" />
+    <Compile Include="Logs\SingleLineLogger.cs" />
+    <Compile Include="Mutexes\SingleInstanceMutex.cs" />
+    <Compile Include="Randoms\RNG.cs" />
+    <Compile Include="Randoms\XORShift64RNG.cs" />
+    <Compile Include="Serialization\BinaryBufferReader.cs" />
+    <Compile Include="Serialization\BinaryConverter.cs" />
+    <Compile Include="Serialization\BinarySerializer.cs" />
+    <Compile Include="Serialization\BinaryStreamWriter.cs" />
+    <Compile Include="Serialization\EncodingAttribute.cs" />
+    <Compile Include="Serialization\Endianess.cs" />
+    <Compile Include="Serialization\EndianessAttribute.cs" />
+    <Compile Include="Serialization\ISerializable.cs" />
+    <Compile Include="Serialization\IXMLSerializable.cs" />
+    <Compile Include="Serialization\OffsetAttribute.cs" />
+    <Compile Include="Serialization\ParserAttribute.cs" />
+    <Compile Include="Serialization\Serializable.cs" />
+    <Compile Include="Serialization\SizeAttribute.cs" />
+    <Compile Include="Serialization\StringEncoding.cs" />
+    <Compile Include="Serialization\XML.cs" />
+    <Compile Include="Services\ParentProcessUtilities.cs" />
+    <Compile Include="Services\WindowsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Logs\Logger.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Threading\PeriodicTimer.cs" />
+    <Compile Include="Threading\PeriodicWorker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DevDir)\Compiled\Library\" />
+    <Copy SourceFiles="$(DocumentationFile)" DestinationFolder="$(DevDir)\Compiled\Library\" />
+  </Target>
+</Project>
