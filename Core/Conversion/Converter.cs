@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 
@@ -43,6 +44,40 @@ namespace NightlyCode.Core.Conversion {
             specificconverters[new ConversionKey(typeof(long), typeof(UIntPtr))] = v => new UIntPtr((ulong)v);
             specificconverters[new ConversionKey(typeof(string), typeof(bool))] = v => ((string)v).ToLower() == "true" || ((string)v != "" && (string)v != "0");
             specificconverters[new ConversionKey(typeof(string), typeof(byte[]))] = v => System.Convert.FromBase64String((string)v);
+            specificconverters[new ConversionKey(typeof(string), typeof(Color))] = ParseColor;
+        }
+
+        static int ParseColorValue(string value) {
+            if(value.Contains("."))
+                return (int)(float.Parse(value.Trim(), CultureInfo.InvariantCulture) * 255.0f);
+            return int.Parse(value.Trim());
+        }
+
+        static object ParseColor(object val) {
+            string value = (string)val;
+            if(value.StartsWith("#")) {
+                if(value.Length == 7)
+                    return Color.FromArgb(int.Parse(value.Substring(1, 2), NumberStyles.HexNumber), int.Parse(value.Substring(3, 2), NumberStyles.HexNumber), int.Parse(value.Substring(5, 2), NumberStyles.HexNumber));
+                if(value.Length == 9)
+                    return Color.FromArgb(int.Parse(value.Substring(1, 2), NumberStyles.HexNumber), int.Parse(value.Substring(3, 2), NumberStyles.HexNumber), int.Parse(value.Substring(5, 2), NumberStyles.HexNumber), int.Parse(value.Substring(7, 2), NumberStyles.HexNumber));
+                throw new Exception($"Invalid color value '{value}'");
+            }
+
+            if(value.ToLower().StartsWith("rgb(")) {
+                int[] values = value.Substring(4, value.Length - 5).Split(',').Select(ParseColorValue).ToArray();
+                if(values.Length != 3)
+                    throw new Exception("Invalid argument count");
+                return Color.FromArgb(values[0], values[1], values[2]);
+            }
+
+            if(value.ToLower().StartsWith("rgba(")) {
+                int[] values = value.Substring(5, value.Length - 6).Split(',').Select(ParseColorValue).ToArray();
+                if (values.Length != 4)
+                    throw new Exception("Invalid argument count");
+                return Color.FromArgb(values[0], values[1], values[2], values[3]);
+            }
+
+            throw new Exception($"unable to parse color value from '{value}'");
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using NightlyCode.Core.Conversion;
 using NUnit.Framework;
 
@@ -6,6 +8,18 @@ namespace GoorooMania.Core.Tests {
 
     [TestFixture]
     public class ConverterTests {
+        IEnumerable<string> Colors
+        {
+            get
+            {
+                yield return "#FF0000";
+                yield return "#8893AB";
+                yield return "rgb(0,0,0)";
+                yield return "rgb(0.0,1.0,0.4)";
+                yield return "rgba(122,200,123,255)";
+                yield return "rgb(0, 2, 1)";
+            }
+        }
 
         [Test]
         public void TestLongToNullableDatetime() {
@@ -28,6 +42,11 @@ namespace GoorooMania.Core.Tests {
             Version decoded = Converter.Convert<Version>(encoded);
             Assert.AreEqual(version, decoded);
 
+        }
+
+        [Test]
+        public void TestColorFromString([ValueSource(nameof(Colors))] string value) {
+            Converter.Convert<Color>(value);
         }
     }
 }
