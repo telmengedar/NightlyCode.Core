@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.ServiceProcess;
 using NightlyCode.Core.Logs;
 
@@ -19,7 +20,7 @@ namespace NightlyCode.Core.Services {
             }
             else {
                 Logger.EnableConsoleLogging();
-                OnStart(new string[0]);
+                OnStart(Environment.GetCommandLineArgs().Skip(1).ToArray())
                 Console.ReadKey();
                 OnStop();
             }

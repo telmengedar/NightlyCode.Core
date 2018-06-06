@@ -25,11 +25,22 @@ namespace NightlyCode.Core.Helpers {
         /// <summary>
         /// get directory of currently executing application
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// directory containing the application executable
+        /// </returns>
         public static string GetApplicationDirectory() {
+            return Path.GetDirectoryName(GetApplicationExecutable());
+        }
+
+        /// <summary>
+        /// get executable used when starting the application
+        /// </summary>
+        /// <returns>
+        /// path to executable
+        /// </returns>
+        public static string GetApplicationExecutable() {
             // one of these assemblies is always set
-            Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-            return Path.GetDirectoryName(assembly.Location);
+            return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location;
         }
 
         /// <summary>
