@@ -20,7 +20,7 @@ namespace NightlyCode.Core.Services {
             }
             else {
                 Logger.EnableConsoleLogging();
-                OnStart(Environment.GetCommandLineArgs().Skip(1).ToArray())
+                OnStart(Environment.GetCommandLineArgs().Skip(1).ToArray());
                 Console.ReadKey();
                 OnStop();
             }
