@@ -52,6 +52,39 @@ namespace NightlyCode.Core.Data
         public string[] Columns => columnnames;
 
         /// <summary>
+        /// tries to get a value from the table, returning default if the specified cell doesn't exist
+        /// </summary>
+        /// <typeparam name="T">type of value to return</typeparam>
+        /// <param name="row">row of cell containing value</param>
+        /// <param name="column">column of cell containing value</param>
+        /// <returns>value of cell, default value if cell doesn't exist</returns>
+        public T TryGetValue<T>(int row, int column) {
+            if (row >= data.Count || column >= data[row].Length)
+                return default(T);
+
+            return GetValue<T>(row, column);
+        }
+
+        /// <summary>
+        /// tries to get a value from the table, returning default if the specified cell doesn't exist
+        /// </summary>
+        /// <typeparam name="T">type of value to return</typeparam>
+        /// <param name="row">row of cell containing value</param>
+        /// <param name="column">column of cell containing value</param>
+        /// <returns>value of cell, default value if cell doesn't exist</returns>
+        public T TryGetValue<T>(int row, string column)
+        {
+            if (row >= data.Count)
+                return default(T);
+
+            int columnindex = Columns.IndexOf(c => c == column);
+            if(columnindex == -1 || columnindex >= data[row].Length)
+                return default(T);
+
+            return GetValue<T>(row, columnindex);
+        }
+
+        /// <summary>
         /// get value of a cell
         /// </summary>
         /// <typeparam name="T">type of value to get</typeparam>
@@ -70,8 +103,7 @@ namespace NightlyCode.Core.Data
         /// <param name="row">row index of cell</param>
         /// <param name="column">name of column</param>
         /// <returns>value of cell</returns>
-        public T GetValue<T>(int row, string column)
-        {
+        public T GetValue<T>(int row, string column) {
             return Converter.Convert<T>(this[row, column]);
         }
 
