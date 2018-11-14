@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NightlyCode.Core</RootNamespace>
     <AssemblyName>NightlyCode.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -44,6 +44,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\Debug\NightlyCode.Core.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,6 +56,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\Release\NightlyCode.Core.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -141,6 +143,15 @@
     <Compile Include="Mutexes\SingleInstanceMutex.cs" />
     <Compile Include="Randoms\RNG.cs" />
     <Compile Include="Randoms\XORShift64RNG.cs" />
+    <Compile Include="Script\InstanceVariableHost.cs" />
+    <Compile Include="Script\IScriptHostPool.cs" />
+    <Compile Include="Script\IScriptToken.cs" />
+    <Compile Include="Script\IScriptVariableHost.cs" />
+    <Compile Include="Script\ScriptMemberAssignment.cs" />
+    <Compile Include="Script\ScriptMemberRead.cs" />
+    <Compile Include="Script\ScriptMethodCall.cs" />
+    <Compile Include="Script\ScriptParser.cs" />
+    <Compile Include="Script\ScriptValue.cs" />
     <Compile Include="Serialization\BinaryBufferReader.cs" />
     <Compile Include="Serialization\BinaryConverter.cs" />
     <Compile Include="Serialization\BinarySerializer.cs" />
