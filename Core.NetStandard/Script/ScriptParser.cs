@@ -31,6 +31,7 @@ namespace NightlyCode.Core.Script {
                         return ParseMember(host, data, ref index, variablehost);
                     case ',':
                     case ')':
+                    case ']':
                         if(tokenname.Length > 0)
                             return new ScriptValue(tokenname.ToString());
                         break;
@@ -40,6 +41,9 @@ namespace NightlyCode.Core.Script {
                     case '"':
                         ++index;
                         return ParseLiteral(data, ref index);
+                    case '[':
+                        ++index;
+                        return new ScriptArray(ParseArray(data, ref index, variablehost));
                     default:
                         tokenname.Append(character);
                         break;
@@ -98,11 +102,41 @@ namespace NightlyCode.Core.Script {
             throw new Exception("Member name expected");
         }
 
+        IScriptToken[] ParseArray(string data, ref int index, IScriptVariableHost variablehost) {
+            List<IScriptToken> array = new List<IScriptToken>();
+            for (; index < data.Length;)
+            {
+                char character = data[index];
+                switch (character)
+                {
+                case '[':
+                    ++index;
+                    array.Add(new ScriptArray(ParseArray(data, ref index, variablehost)));
+                    break;
+                case ']':
+                    ++index;
+                    return array.ToArray();
+                case ',':
+                    ++index;
+                    break;
+                default:
+                    array.Add(ParseToken(data, ref index, variablehost));
+                    break;
+                }
+            }
+
+            throw new Exception("Array not terminated");
+        }
+
         IScriptToken[] ParseParameters(string data, ref int index, IScriptVariableHost variablehost) {
             List<IScriptToken> parameters = new List<IScriptToken>();
             for(; index < data.Length;) {
                 char character = data[index];
                 switch(character) {
+                    case '[':
+                        ++index;
+                        parameters.Add(new ScriptArray(ParseArray(data, ref index, variablehost)));
+                        break;
                     case ')':
                         ++index;
                         return parameters.ToArray();

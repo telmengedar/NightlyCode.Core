@@ -19,6 +19,7 @@
             return value;
         }
 
+        /// <inheritdoc />
         public override string ToString() {
             return value?.ToString() ?? "null";
         }
