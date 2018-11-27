@@ -8,6 +8,15 @@ namespace Core.Tests {
 
     [TestFixture]
     public class ConverterTests {
+
+        [Flags]
+        enum Test {
+            First=1,
+            Second=2,
+            Third=4,
+            Fourth=8
+        }
+
         static IEnumerable<string> Colors
         {
             get
@@ -47,6 +56,12 @@ namespace Core.Tests {
         [Test]
         public void TestColorFromString([ValueSource(nameof(Colors))] string value) {
             Converter.Convert<Color>(value);
+        }
+
+        [Test]
+        public void TestEnumFlags() {
+            Test converted = Converter.Convert<Test>("Second|Fourth");
+            Assert.AreEqual(Test.Second | Test.Fourth, converted);
         }
     }
 }

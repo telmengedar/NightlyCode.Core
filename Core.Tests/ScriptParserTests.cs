@@ -33,6 +33,7 @@ namespace NightlyCode.Core.Tests {
         [TestCase("test.method($test,2)")]
         [TestCase("test.method(\"\",clean)")]
         [TestCase("test.speak(It is quite simple,\"CereVoice Stuart - English (Scotland)\")")]
+        [TestCase("test.property=255.34")]
         public void TestValidStatements(string statement)
         {
             ScriptParser parser = new ScriptParser(new TestHostPool());

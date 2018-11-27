@@ -23,6 +23,9 @@ namespace NightlyCode.Core.Script {
 
             for(; index < data.Length; ++index) {
                 char character = data[index];
+                if(char.IsDigit(character))
+                    return ParseNumber(data, ref index, variablehost);
+
                 switch(character) {
                     case '.':
                         object host = hostpool.GetHost(tokenname.ToString());
@@ -49,6 +52,48 @@ namespace NightlyCode.Core.Script {
             if(tokenname.Length > 0)
                 return new ScriptValue(tokenname.ToString());
             return new ScriptValue(null);
+        }
+
+        IScriptToken ParseNumber(string data, ref int index, IScriptVariableHost variablehost) {
+            StringBuilder literal = new StringBuilder();
+            bool done=false;
+            for (; index < data.Length && !done; ++index)
+            {
+                char character = data[index];
+                switch (character)
+                {
+                    case ',':
+                    case '(':
+                    case ')':
+                        ++index;
+                        done = true;
+                        break;
+                    default:
+                        literal.Append(character);
+                        break;
+                }
+            }
+
+            // this can't be a number
+            if(literal.Length == 0)
+                return new ScriptValue("");
+
+            int dotcount = 0;
+            for(int i = 0; i < literal.Length; ++i) {
+                if(!char.IsDigit(literal[i]) && literal[i] != '.')
+                    return new ScriptValue(literal.ToString());
+                if(literal[i] == '.')
+                    ++dotcount;
+            }
+
+            switch(dotcount) {
+                case 0:
+                    return new ScriptValue(long.Parse(literal.ToString()));
+                case 1:
+                    return new ScriptValue(double.Parse(literal.ToString()));
+                default:
+                    return new ScriptValue(literal.ToString());
+            }
         }
 
         IScriptToken ParseLiteral(string data, ref int index) {

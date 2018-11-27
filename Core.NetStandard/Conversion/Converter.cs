@@ -91,21 +91,30 @@ namespace NightlyCode.Core.Conversion {
 
         static object ConvertToEnum(object value, Type targettype, bool allownullonvaluetypes=false) {
             Type valuetype;
-            if (value is string)
+            if (value is string s)
             {
-                if (((string)value).Length == 0)
+                if (s.Length == 0)
                 {
                     if (allownullonvaluetypes)
                         return null;
                     throw new ArgumentException("Empty string is invalid for an enum type");
                 }
 
-                if (((string)value).All(char.IsDigit))
+                if (s.All(char.IsDigit))
                 {
                     valuetype = Enum.GetUnderlyingType(targettype);
-                    return Convert(value, valuetype, allownullonvaluetypes);
+                    return Convert(s, valuetype, allownullonvaluetypes);
                 }
-                return Enum.Parse(targettype, (string)value, true);
+
+                if(s.Contains('|')) {
+                    string[] split = s.Split('|');
+                    int enumvalue = 0;
+                    foreach(string flag in split)
+                        enumvalue |= (int)Enum.Parse(targettype, flag, true);
+                    return Enum.ToObject(targettype, enumvalue);
+                }
+
+                return Enum.Parse(targettype, s, true);
             }
             valuetype = Enum.GetUnderlyingType(targettype);
             return Enum.ToObject(targettype, Convert(value, valuetype, allownullonvaluetypes));

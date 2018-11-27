@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace NightlyCode.Core.Script {
@@ -23,7 +24,10 @@ namespace NightlyCode.Core.Script {
 
             for(; index < data.Length; ++index) {
                 char character = data[index];
-                switch(character) {
+                if(tokenname.Length == 0 && (char.IsDigit(character) || character == '.' || character == '-'))
+                    return ParseNumber(data, ref index);
+
+                switch (character) {
                     case '.':
                         object host = hostpool.GetHost(tokenname.ToString());
                         tokenname.Length = 0;
@@ -53,6 +57,56 @@ namespace NightlyCode.Core.Script {
             if(tokenname.Length > 0)
                 return new ScriptValue(tokenname.ToString());
             return new ScriptValue(null);
+        }
+
+        IScriptToken ParseNumber(string data, ref int index)
+        {
+            StringBuilder literal = new StringBuilder();
+            bool done = false;
+            for (; index < data.Length; ++index)
+            {
+                char character = data[index];
+                switch (character)
+                {
+                    case ',':
+                        ++index;
+                        done = true;
+                        break;
+                    case ')':
+                    case ']':
+                        done = true;
+                        break;
+                    default:
+                        literal.Append(character);
+                        break;
+                }
+
+                if(done)
+                    break;
+            }
+
+            // this can't be a number
+            if (literal.Length == 0)
+                return new ScriptValue("");
+
+            int dotcount = 0;
+            for (int i = 0; i < literal.Length; ++i) {
+                if(!char.IsDigit(literal[i]) && literal[i] != '.' || i > 0 && literal[i] == '-')
+                    return new ScriptValue(literal.ToString());
+
+                if (literal[i] == '.')
+                    ++dotcount;
+            }
+
+            switch (dotcount)
+            {
+                case 0:
+                    return new ScriptValue(long.Parse(literal.ToString()));
+                case 1:
+                    return new ScriptValue(double.Parse(literal.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                default:
+                    return new ScriptValue(literal.ToString());
+            }
         }
 
         IScriptToken ParseLiteral(string data, ref int index) {
