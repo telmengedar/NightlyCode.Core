@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NightlyCode.Core.Conversion;
+using NightlyCode.Core.Logs;
 
 namespace NightlyCode.Core.Script {
 
@@ -26,6 +27,11 @@ namespace NightlyCode.Core.Script {
             this.parameters = parameters;
         }
 
+        IEnumerable<object> CreateParameters(ParameterInfo[] targetparameters) {
+            for(int i = 0; i < targetparameters.Length; ++i)
+                yield return Converter.Convert(parameters[i].Execute(), targetparameters[i].ParameterType);
+        }
+
         /// <inheritdoc />
         public object Execute() {
             MethodInfo[] methods = host.GetType().GetMethods().Where(m => m.Name.ToLower() == methodname && m.GetParameters().Length == parameters.Length).ToArray();
@@ -33,15 +39,20 @@ namespace NightlyCode.Core.Script {
                 throw new Exception($"Method '{methodname}' matching the specified parameters count not found on type {host.GetType().Name}");
 
             foreach(MethodInfo method in methods) {
+                ParameterInfo[] targetparameters = method.GetParameters();
+                object[] callparameters;
                 try {
-                    List<object> convertedparameters = new List<object>();
-                    ParameterInfo[] targetparameters = method.GetParameters();
-                    for(int i = 0; i < targetparameters.Length; ++i)
-                        convertedparameters.Add(Converter.Convert(parameters[i].Execute(), targetparameters[i].ParameterType));
-                    return method.Invoke(host, convertedparameters.ToArray());
+                    callparameters = CreateParameters(targetparameters).ToArray();
                 }
                 catch(Exception) {
                     continue;
+                }
+
+                try {
+                    return method.Invoke(host, callparameters);
+                }
+                catch(Exception e) {
+                    Logger.Error(this, $"Unable to call {host.GetType().Name}.{method.Name}({string.Join(",", callparameters)})", e);
                 }
             }
 
