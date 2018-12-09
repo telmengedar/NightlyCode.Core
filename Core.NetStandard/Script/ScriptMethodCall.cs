@@ -28,8 +28,29 @@ namespace NightlyCode.Core.Script {
         }
 
         IEnumerable<object> CreateParameters(ParameterInfo[] targetparameters) {
-            for(int i = 0; i < targetparameters.Length; ++i)
-                yield return Converter.Convert(parameters[i].Execute(), targetparameters[i].ParameterType);
+            for(int i = 0; i < targetparameters.Length; ++i) {
+                object value = parameters[i].Execute();
+                if(targetparameters[i].ParameterType.IsArray) {
+                    if(value == null)
+                        yield return null;
+                    else {
+                        Type elementtype = targetparameters[i].ParameterType.GetElementType();
+                        if (value is Array valuearray) {
+                            Array array = Array.CreateInstance(elementtype, valuearray.Length);
+                            for(int k = 0; k < array.Length; ++k)
+                                array.SetValue(Converter.Convert(valuearray.GetValue(k), elementtype), k);
+                            yield return array;
+                        }
+                        else {
+                            Array array = Array.CreateInstance(elementtype, 1);
+                            array.SetValue(value, 0);
+                            yield return array;
+                        }
+                    }
+                }
+                else yield return Converter.Convert(value, targetparameters[i].ParameterType);
+            }
+                
         }
 
         /// <inheritdoc />

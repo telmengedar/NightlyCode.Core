@@ -14,6 +14,8 @@ namespace Core.Tests {
                     return this;
                 throw new Exception($"host {name} unknown");
             }
+
+            public void TestMethod(string parameter, string[] parameters) { }
         }
 
         class TestVariableHost : IScriptVariableHost
@@ -42,5 +44,11 @@ namespace Core.Tests {
             Assert.AreEqual(expectedroot, token.GetType());
         }
 
+        [Test]
+        public void TestMethodCallWithArray() {
+            ScriptParser parser = new ScriptParser(new TestHostPool());
+            IScriptToken token = parser.Parse("test.testmethod(fuck,[you])", new TestVariableHost());
+            Assert.DoesNotThrow(() => token.Execute());
+        }
     }
 }
