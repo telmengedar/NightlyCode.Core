@@ -27,14 +27,26 @@ namespace NightlyCode.Core.Script {
 
         object SetProperty(PropertyInfo property) {
             object targetvalue = Converter.Convert(value.Execute(), property.PropertyType);
-            property.SetValue(host, targetvalue, null);
+            try {
+                property.SetValue(host, targetvalue, null);
+            }
+            catch(Exception e) {
+                throw new ScriptException("Unable to set property", null, e);
+            }
+            
             return targetvalue;
         }
 
         object SetField(FieldInfo fieldinfo)
         {
             object targetvalue = Converter.Convert(value.Execute(), fieldinfo.FieldType);
-            fieldinfo.SetValue(host, targetvalue);
+            try {
+                fieldinfo.SetValue(host, targetvalue);
+            }
+            catch(Exception e) {
+                throw new ScriptException("Unable to set field", null, e);
+            }
+            
             return targetvalue;
         }
 
@@ -46,7 +58,7 @@ namespace NightlyCode.Core.Script {
 
             FieldInfo fieldinfo = host.GetType().GetFields().FirstOrDefault(f => f.Name.ToLower() == membername);
             if(fieldinfo == null)
-                throw new MissingMemberException($"A member with the name of {membername} was not found in type {host.GetType().Name}");
+                throw new ScriptException($"A member with the name of {membername} was not found in type {host.GetType().Name}");
 
             return SetField(fieldinfo);
         }

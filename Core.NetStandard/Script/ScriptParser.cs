@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -37,7 +36,7 @@ namespace NightlyCode.Core.Script {
                     case ')':
                     case ']':
                         if(tokenname.Length > 0)
-                            return new ScriptValue(tokenname.ToString());
+                            return new ScriptValue(tokenname.ToString().TrimEnd(' '));
                         break;
                     case '$':
                         ++index;
@@ -48,6 +47,15 @@ namespace NightlyCode.Core.Script {
                     case '[':
                         ++index;
                         return new ScriptArray(ParseArray(data, ref index, variablehost));
+                    case ' ':
+                        if(tokenname.Length == 0)
+                            continue;
+                        tokenname.Append(character);
+                        break;
+                    case '\\':
+                        ++index;
+                        tokenname.Append(ParseSpecialCharacter(data[index]));
+                        break;
                     default:
                         tokenname.Append(character);
                         break;
@@ -55,7 +63,7 @@ namespace NightlyCode.Core.Script {
             }
 
             if(tokenname.Length > 0)
-                return new ScriptValue(tokenname.ToString());
+                return new ScriptValue(tokenname.ToString().TrimEnd(' '));
             return new ScriptValue(null);
         }
 
@@ -109,6 +117,19 @@ namespace NightlyCode.Core.Script {
             }
         }
 
+        char ParseSpecialCharacter(char character) {
+            switch(character) {
+                case 't':
+                    return '\t';
+                case 'n':
+                    return '\n';
+                case 'r':
+                    return '\r';
+                default:
+                    return character;
+            }
+        }
+
         IScriptToken ParseLiteral(string data, ref int index) {
             StringBuilder literal = new StringBuilder();
             for(; index < data.Length; ++index) {
@@ -117,13 +138,17 @@ namespace NightlyCode.Core.Script {
                     case '"':
                         ++index;
                         return new ScriptValue(literal.ToString());
+                    case '\\':
+                        ++index;
+                        literal.Append(ParseSpecialCharacter(data[index]));
+                        break;
                     default:
                         literal.Append(character);
                         break;
                 }
             }
 
-            throw new Exception("Literal not terminated");
+            throw new ScriptException("Literal not terminated");
         }
 
         IScriptToken ParseMember(object host, string data, ref int index, IScriptVariableHost variablehost) {
@@ -143,7 +168,7 @@ namespace NightlyCode.Core.Script {
                     case ',':
                     case ')':
                         if (membername.Length == 0)
-                            throw new Exception("Member name expected");
+                            throw new ScriptException("Member name expected");
                         return new ScriptMemberRead(host, membername.ToString());
                     default:
                         membername.Append(character);
@@ -153,7 +178,7 @@ namespace NightlyCode.Core.Script {
 
             if(membername.Length > 0)
                 return new ScriptMemberRead(host, membername.ToString());
-            throw new Exception("Member name expected");
+            throw new ScriptException("Member name expected");
         }
 
         IScriptToken[] ParseArray(string data, ref int index, IScriptVariableHost variablehost) {
@@ -179,7 +204,7 @@ namespace NightlyCode.Core.Script {
                 }
             }
 
-            throw new Exception("Array not terminated");
+            throw new ScriptException("Array not terminated");
         }
 
         IScriptToken[] ParseParameters(string data, ref int index, IScriptVariableHost variablehost) {
@@ -203,7 +228,7 @@ namespace NightlyCode.Core.Script {
                 }
             }
 
-            throw new Exception("Parameter list not terminated");
+            throw new ScriptException("Parameter list not terminated");
         }
 
         /// <summary>

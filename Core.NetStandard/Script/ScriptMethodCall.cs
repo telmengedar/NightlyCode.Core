@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using NightlyCode.Core.Conversion;
-using NightlyCode.Core.Logs;
 
 namespace NightlyCode.Core.Script {
 
@@ -57,7 +57,9 @@ namespace NightlyCode.Core.Script {
         public object Execute() {
             MethodInfo[] methods = host.GetType().GetMethods().Where(m => m.Name.ToLower() == methodname && m.GetParameters().Length == parameters.Length).ToArray();
             if(methods.Length == 0)
-                throw new Exception($"Method '{methodname}' matching the specified parameters count not found on type {host.GetType().Name}");
+                throw new ScriptException($"Method '{methodname}' matching the specified parameters count not found on type {host.GetType().Name}");
+
+            StringBuilder executionlog = new StringBuilder();
 
             foreach(MethodInfo method in methods) {
                 ParameterInfo[] targetparameters = method.GetParameters();
@@ -65,7 +67,8 @@ namespace NightlyCode.Core.Script {
                 try {
                     callparameters = CreateParameters(targetparameters).ToArray();
                 }
-                catch(Exception) {
+                catch(Exception e) {
+                    executionlog.AppendLine($"Unable to convert parameters for {host.GetType().Name}.{method.Name}({string.Join(",", targetparameters.Select(p => p.ParameterType.Name + " " + p.Name))}) - {e.Message}");
                     continue;
                 }
 
@@ -73,11 +76,11 @@ namespace NightlyCode.Core.Script {
                     return method.Invoke(host, callparameters);
                 }
                 catch(Exception e) {
-                    Logger.Error(this, $"Unable to call {host.GetType().Name}.{method.Name}({string.Join(",", callparameters)})", e);
+                    executionlog.AppendLine($"Unable to call {host.GetType().Name}.{method.Name}({string.Join(",", callparameters)}) - {e.Message}");
                 }
             }
 
-            throw new Exception("None of the matching methods could be invoked using the specified parameters");
+            throw new ScriptException("None of the matching methods could be invoked using the specified parameters", executionlog.ToString());
         }
 
         public override string ToString() {

@@ -15,7 +15,9 @@ namespace Core.Tests {
                 throw new Exception($"host {name} unknown");
             }
 
-            public void TestMethod(string parameter, string[] parameters) { }
+            public string TestMethod(string parameter, string[] parameters) {
+                return $"{parameter}_{string.Join(",", parameters)}";
+            }
         }
 
         class TestVariableHost : IScriptVariableHost
@@ -49,6 +51,22 @@ namespace Core.Tests {
             ScriptParser parser = new ScriptParser(new TestHostPool());
             IScriptToken token = parser.Parse("test.testmethod(fuck,[you])", new TestVariableHost());
             Assert.DoesNotThrow(() => token.Execute());
+        }
+
+        [Test]
+        public void TestMethodCallWithSpaces() {
+            ScriptParser parser = new ScriptParser(new TestHostPool());
+            IScriptToken token = parser.Parse("test.testmethod( fuck ,[ you , for,real ])", new TestVariableHost());
+            string result = token.Execute() as string;
+            Assert.AreEqual("fuck_you,for,real", result);
+        }
+
+        [Test]
+        public void TestTabInParameter() {
+            ScriptParser parser = new ScriptParser(new TestHostPool());
+            IScriptToken token = parser.Parse("test.testmethod( \\\" ,[   \"\\t\"])", new TestVariableHost());
+            string result = token.Execute() as string;
+            Assert.AreEqual("\"_\t", result);
         }
     }
 }
